@@ -75,4 +75,15 @@
 )
 
 (defn my-map [f & a-seq]
-  (reduce f a-seq))
+  (loop [
+          rem_seqs a-seq
+          result   []
+        ]
+    (if (some empty? rem_seqs)
+      result
+      (let [
+             first-seq (reduce #(conj %1 (first %2)) [] rem_seqs)
+             rem-seq   (reduce #(conj %1 (rest  %2)) [] rem_seqs)
+           ]
+        (recur rem-seq (conj result (apply f first-seq)))
+))))
